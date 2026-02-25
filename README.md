@@ -1,0 +1,171 @@
+# Hospital Readmission Prediction Using Diabetes
+
+> **Course:** IE6600 — Computation and Visualization | **Group:** 18 | **Year:** 2022
+
+## Project Overview
+
+This project analyzes historical clinical data from diabetic patients to identify patterns and risk factors associated with hospital readmission. Understanding which patients are likely to be readmitted helps healthcare providers take proactive steps to improve patient outcomes and reduce costs.
+
+**Problem Statement:** Predict whether a diabetic patient will be readmitted to the hospital — and if so, whether within 30 days or after 30 days — based on their clinical encounter data.
+
+**Target Variable:** `readmitted`
+| Value | Meaning |
+|-------|---------|
+| `NO` | Patient was not readmitted |
+| `<30` | Patient was readmitted within 30 days |
+| `>30` | Patient was readmitted after 30 days |
+
+---
+
+## Dataset
+
+| Property | Value |
+|----------|-------|
+| Primary Source | `diabetic_data.csv` |
+| Secondary Source | `US healthcare data.csv` |
+| Raw Records | 101,766 encounters |
+| After Deduplication | 71,518 unique patients |
+| Features | 50+ columns |
+
+### Feature Categories
+
+| Category | Features |
+|----------|---------|
+| Demographics | `race`, `gender`, `age`, `weight` |
+| Admission Info | `admission_type_id`, `discharge_disposition_id`, `admission_source_id` |
+| Hospital Stay | `time_in_hospital`, `medical_specialty` |
+| Procedures & Labs | `num_lab_procedures`, `num_procedures`, `num_medications` |
+| Prior Utilization | `number_outpatient`, `number_emergency`, `number_inpatient` |
+| Diagnoses | `diag_1`, `diag_2`, `diag_3`, `number_diagnoses` |
+| Lab Results | `max_glu_serum`, `A1Cresult` |
+| Medications | `metformin`, `insulin`, `glipizide`, `glyburide`, and 20+ others |
+| Target | `readmitted` |
+
+---
+
+## Project Structure
+
+```
+Hospital-Readmission-Prediction-Using-Diabetes/
+├── Computation_&_Visualization (1).ipynb   # Main analysis notebook
+├── Comp viz 2.twb                          # Tableau visualization workbook
+├── Cv_Project2-Grp18.pdf                  # Project report
+└── README.md                              # This file
+```
+
+---
+
+## Analysis Pipeline
+
+### Step 1: Data Loading
+- Load `diabetic_data.csv` (101,766 records, 50 columns)
+- Load `US healthcare data.csv` (28 columns) for reference
+
+### Step 2: Data Cleaning
+- Replace `?` placeholder values with `NaN`
+- Remove duplicate patient encounters — keep only the first encounter per `patient_nbr`
+- Impute missing diagnosis codes with the most frequent value (`diag_1 = 414`)
+
+### Step 3: Feature Engineering
+
+**Age Transformation**
+
+Age ranges are converted to numeric midpoints for analysis:
+
+| Age Range | Numeric Value |
+|-----------|--------------|
+| `[0-10)` | 5 |
+| `[10-20)` | 15 |
+| `[20-30)` | 25 |
+| ... | ... |
+| `[90-100)` | 95 |
+
+**Diagnosis Categorization (ICD-9 Codes)**
+
+The three diagnosis columns (`diag_1`, `diag_2`, `diag_3`) are grouped into 10 clinically meaningful categories:
+
+| Category | ICD-9 Code Range |
+|----------|-----------------|
+| Circulatory | 390–459, 785 |
+| Respiratory | 460–519, 786 |
+| Digestive | 520–579, 787 |
+| Diabetes | 250.xx |
+| Genitourinary | 580–629, 788 |
+| Musculoskeletal | 710–739 |
+| Neoplasms | 140–239 |
+| Injury | 800–999 |
+| Pregnancy | 630–679 |
+| Other | V-codes, E-codes, remainder |
+
+### Step 4: Exploratory Data Analysis (EDA)
+- Correlation heatmaps to identify relationships between numeric features
+- Distribution analysis of key variables
+- Missing data assessment
+
+### Step 5: Visualization
+- Python-based statistical plots (Matplotlib, Seaborn, Plotly)
+- Interactive Tableau dashboards (`Comp viz 2.twb`) for stakeholder presentation
+
+---
+
+## Technologies Used
+
+| Tool | Purpose |
+|------|---------|
+| Python 3 | Core programming language |
+| Pandas | Data manipulation and preprocessing |
+| NumPy | Numerical computing |
+| SciPy | Statistical analysis |
+| Matplotlib | Static plots |
+| Seaborn | Statistical visualizations |
+| Plotly Express | Interactive charts |
+| Tableau 2021.4.4 | Business intelligence dashboards |
+| Jupyter Notebook | Development environment |
+| Google Colab | Cloud-based execution |
+
+---
+
+## Setup & Usage
+
+### Option 1: Google Colab (Recommended)
+
+1. Upload the notebook `Computation_&_Visualization (1).ipynb` to Google Colab
+2. Upload `diabetic_data.csv` and `US healthcare data.csv` to `/content/`
+3. Run all cells in order
+
+### Option 2: Local Jupyter Notebook
+
+1. Install dependencies:
+   ```bash
+   pip install pandas numpy scipy matplotlib seaborn plotly
+   ```
+2. Place the CSV data files in the same directory as the notebook
+3. Update the file paths in the data loading cells from `/content/` to your local path
+4. Launch Jupyter and run the notebook:
+   ```bash
+   jupyter notebook "Computation_&_Visualization (1).ipynb"
+   ```
+
+### Tableau Dashboard
+
+Open `Comp viz 2.twb` in **Tableau Desktop 2021.4 or later**. Ensure `df.csv` (generated by the notebook) is available in the same directory.
+
+---
+
+## Key Findings
+
+- The dataset spans **71,518 unique diabetic patient encounters** after removing repeat visits
+- **10 ICD-9 diagnosis categories** effectively summarize the diverse range of primary diagnoses
+- Circulatory and diabetic conditions are among the most common primary diagnoses
+- Medication usage patterns and number of prior inpatient visits are key indicators worth further modeling
+
+---
+
+## Course Information
+
+| Field | Details |
+|-------|---------|
+| Course | IE6600 — Computation and Visualization |
+| Group | Group 18 |
+| Semester | Spring 2022 |
+| Repository | [Ramibrahim7/Hospital-Readmission-Prediction-Using-Diabetes](https://github.com/Ramibrahim7/Hospital-Readmission-Prediction-Using-Diabetes) |
